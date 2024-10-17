@@ -10,6 +10,8 @@ services:
     restart: always
     ports:
       - 8000:8000
+    volumes:
+      - ./outputs://usr/src/app/outputs
   gptr-nextjs:
     pull_policy: build
     image: gptresearcher/gptr-nextjs
@@ -25,7 +27,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-
+    command: "npm run dev -- -H 0.0.0.0"
   gpt-researcher-tests:
     image: gptresearcher/gpt-researcher-tests
     build: ./
