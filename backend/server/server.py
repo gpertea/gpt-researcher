@@ -15,6 +15,7 @@ from backend.server.server_utils import (
     execute_multi_agents, handle_websocket_communication
 )
 
+
 # Models
 
 
@@ -73,6 +74,7 @@ def startup_event():
     os.makedirs("outputs", exist_ok=True)
     app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
     os.makedirs(DOC_PATH, exist_ok=True)
+    
 
 # Routes
 
