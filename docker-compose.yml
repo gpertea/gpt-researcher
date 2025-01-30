@@ -9,12 +9,13 @@ services:
       LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY}
       LOGGING_LEVEL: INFO
     volumes:
-      - ./outputs:/usr/src/app/outputs
+      - ${PWD}/outputs:/usr/src/app/outputs:rw
+      - ${PWD}/logs:/usr/src/app/logs:rw
+    user: root
     restart: always
     ports:
       - 8000:8000
-    volumes:
-      - ./outputs://usr/src/app/outputs
+      
   gptr-nextjs:
     pull_policy: build
     image: gptresearcher/gptr-nextjs
@@ -22,6 +23,7 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: true
       LOGGING_LEVEL: INFO
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID}
     build:
       dockerfile: Dockerfile.dev
       context: frontend/nextjs
@@ -32,7 +34,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-    command: "npm run dev -- -H 0.0.0.0"
+
   gpt-researcher-tests:
     image: gptresearcher/gpt-researcher-tests
     build: ./
@@ -48,3 +50,18 @@ services:
       python -m pytest tests/report-types.py &&
       python -m pytest tests/vector-store.py
       "
+  
+  discord-bot:
+    build:
+      context: ./docs/discord-bot
+      dockerfile: Dockerfile.dev
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+    volumes:
+      - ./docs/discord-bot:/app
+      - /app/node_modules
+    ports:
+      - 3001:3000
+    profiles: ["discord"]
+    restart: always
