@@ -21,6 +21,7 @@ from backend.server.websocket_manager import run_agent
 from backend.utils import write_md_to_word, write_md_to_pdf
 from gpt_researcher.utils.logging_config import setup_research_logging
 from gpt_researcher.utils.enum import Tone
+from backend.chat.chat import ChatAgentWithMemory
 
 import logging
 
@@ -154,7 +155,7 @@ async def write_report(research_request: ResearchRequest, research_id: str = Non
             "pdf_path": pdf_path
         }
     else:
-        response = { "research_id": research_id, "report": report, "docx_path": docx_path, "pdf_path": pdf_path }
+        response = { "research_id": research_id, "report": "", "docx_path": docx_path, "pdf_path": pdf_path }
 
     return response
 
